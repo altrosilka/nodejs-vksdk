@@ -72,12 +72,12 @@ var VK = function(_options) {
      *     { token : string }  - setup token manually
      * @returns {undefined}
      */
-    self.setToken = function(_param) {
+    self.setToken = function(_param, _redirect_uri) {
         if (typeof(_param) === 'object') {
             if (_param.token) {
                 self.token = _param.token;
             } else if (_param.code) {
-                self._setUpTokenByCode(_param.code);
+                self._setUpTokenByCode(_param.code, _redirect_uri);
             }
         } else {
             self._setUpAppServerToken();
@@ -135,13 +135,14 @@ var VK = function(_options) {
      * @param {string} _code
      * @returns {undefined}
      */
-    self._setUpTokenByCode = function(_code) {
+    self._setUpTokenByCode = function(_code, _redirect_uri) {
         var options = {
             host: 'oauth.vk.com',
             port: 443,
             path: '/access_token?client_id=' + self.options.appID +
                 '&client_secret=' + self.options.appSecret +
-                '&code=' + _code
+                '&code=' + _code +
+                '&redirect_uri=' + _redirect_uri
         };
 
         https.get(options, function(res) {
